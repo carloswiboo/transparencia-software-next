@@ -1,0 +1,39 @@
+{
+  "name": "gff-software-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "preview-email": "email dev"
+  },
+  "dependencies": {
+    "@next/font": "13.2.4",
+    "@prisma/client": "^4.13.0",
+    "@react-email/container": "^0.0.8",
+    "@react-email/html": "^0.0.4",
+    "@react-email/section": "^0.0.9",
+    "@react-email/text": "^0.0.5",
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.3",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "formidable": "^2.1.1",
+    "jose": "^4.13.1",
+    "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "mv": "^2.1.1",
+    "next": "13.2.4",
+    "nodemailer": "^6.9.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-email": "^1.9.0",
+    "uuid": "^9.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "prisma": "^4.13.0"
+  }
+}

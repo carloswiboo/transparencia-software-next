@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ediciones {
+  idedicion      Int              @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  anio           String           @db.VarChar(10)
+  nombre         String           @db.VarChar(100)
+  slogan         String           @db.VarChar(300)
+  fechaInicio    DateTime         @db.DateTime(0)
+  fechaFin       DateTime         @db.DateTime(0)
+  creation_date  DateTime         @default(now()) @db.DateTime(0)
+  update_date    DateTime         @default(now()) @db.DateTime(0)
+  status         Int
+  cines          cines[]
+  equipo         equipo[]
+  patrocinadores patrocinadores[]
+}
+
+model patrocinadores {
+  idpatrocinador Int       @id @default(autoincrement())
+  idedicion      Int
+  nombre         String    @db.VarChar(1000)
+  web            String    @db.VarChar(1000)
+  facebook       String?   @db.VarChar(1000)
+  instagram      String?   @db.VarChar(1000)
+  linkedin       String?   @db.VarChar(1000)
+  imagenUrl      String?   @db.VarChar(1000)
+  comentarios    String?   @db.Text
+  status         Int?
+  orden          Int?
+  creation_date  DateTime  @default(now()) @db.DateTime(0)
+  update_date    DateTime  @default(now()) @db.DateTime(0)
+  ediciones      ediciones @relation(fields: [idedicion], references: [idedicion], onDelete: NoAction, onUpdate: NoAction, map: "Patrocinadores_Edicion")
+
+  @@index([idedicion], map: "Patrocinadores_Edicion_idx")
+}
+
+model puestos {
+  id            Int        @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  nombre        String?    @db.Text
+  descripcion   String?    @db.Text
+  creation_date DateTime   @default(now()) @db.Timestamp(0)
+  update_date   DateTime   @default(now()) @db.Timestamp(0)
+  status        Int?
+  usuarios      usuarios[]
+}
+
+model usuarios {
+  idusuario        Int            @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  nombres          String         @db.VarChar(500)
+  apellidos        String         @db.VarChar(500)
+  email            String         @db.VarChar(500)
+  contrasena       String         @db.VarChar(500)
+  idpuesto         Int?
+  idtipos_usuarios Int
+  creation_date    DateTime       @default(now()) @db.Timestamp(0)
+  update_date      DateTime       @default(now()) @db.Timestamp(0)
+  status           Int
+  imagenUrl        String?        @db.VarChar(1000)
+  puestos          puestos?       @relation(fields: [idpuesto], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "idpuesto_puestos")
+  tipos_usuarios   tipos_usuarios @relation(fields: [idtipos_usuarios], references: [idtipos_usuarios], onDelete: NoAction, onUpdate: NoAction, map: "idtipos_usuarios")
+
+  @@index([idpuesto], map: "idpuesto_puestos_idx")
+  @@index([idtipos_usuarios], map: "idtipos_usuarios_idx")
+}
+
+model equipo {
+  idequipo      Int        @id @default(autoincrement())
+  idedicion     Int?
+  idpuesto      Int?
+  orden         Int?
+  nombre        String?    @db.VarChar(200)
+  descripcion   String?    @db.VarChar(200)
+  linkedin      String?    @db.VarChar(500)
+  creation_date DateTime?  @default(now()) @db.Timestamp(0)
+  update_date   DateTime?  @default(now()) @db.Timestamp(0)
+  status        Int?
+  imagenUrl     String?    @db.VarChar(1000)
+  ediciones     ediciones? @relation(fields: [idedicion], references: [idedicion], onDelete: NoAction, onUpdate: NoAction, map: "Relacion_Equipo_Edicion")
+
+  @@index([idedicion], map: "Relacion_Equipo_Edicion_idx")
+}
+
+model tipos_usuarios {
+  idtipos_usuarios    Int        @id @default(autoincrement())
+  nombre_tipo_usuario String?    @db.VarChar(45)
+  status              Int?
+  usuarios            usuarios[]
+}
+
+model catalogo {
+  idcatalogo                                                     Int                       @id @default(autoincrement())
+  First_Name                                                     String?                   @map("First Name") @db.Text
+  Last_Name                                                      String?                   @map("Last Name") @db.Text
+  Birthdate                                                      String?                   @db.Text
+  Gender                                                         String?                   @db.Text
+  Email                                                          String?                   @db.Text
+  Phone                                                          String?                   @db.Text
+  Address                                                        String?                   @db.Text
+  Address_2                                                      String?                   @map("Address 2") @db.Text
+  City                                                           String?                   @db.Text
+  State                                                          String?                   @db.Text
+  Postal_Code                                                    String?                   @map("Postal Code") @db.Text
+  Country                                                        String?                   @db.Text
+  Tracking_Number                                                String?                   @map("Tracking Number") @db.Text
+  Project_Title                                                  String?                   @map("Project Title") @db.Text
+  Project_Title__Original_Language_                              String?                   @map("Project Title (Original Language)") @db.Text
+  Synopsis                                                       String?                   @db.Text
+  Synopsis__Original_Language_                                   String?                   @map("Synopsis (Original Language)") @db.Text
+  Lyrics                                                         String?                   @db.Text
+  Duration                                                       String?                   @db.Text
+  Country_of_Origin                                              String?                   @map("Country of Origin") @db.Text
+  Language                                                       String?                   @db.Text
+  Trailer_URL                                                    String?                   @map("Trailer URL") @db.Text
+  Country_of_Filming                                             String?                   @map("Country of Filming") @db.Text
+  Project_Website                                                String?                   @map("Project Website") @db.Text
+  Twitter                                                        String?                   @db.Text
+  Facebook                                                       String?                   @db.Text
+  Instagram                                                      String?                   @db.Text
+  Project_Type                                                   String?                   @map("Project Type") @db.Text
+  Genres                                                         String?                   @db.Text
+  Student_Project                                                String?                   @map("Student Project") @db.Text
+  Completion_Date                                                String?                   @map("Completion Date") @db.Text
+  Production_Budget                                              String?                   @map("Production Budget") @db.Text
+  Shooting_Format                                                String?                   @map("Shooting Format") @db.Text
+  Aspect_Ratio                                                   String?                   @map("Aspect Ratio") @db.Text
+  Film_Color                                                     String?                   @map("Film Color") @db.Text
+  Camera                                                         String?                   @db.Text
+  Lens                                                           String?                   @db.Text
+  Focal_Length                                                   String?                   @map("Focal Length") @db.Text
+  Shutter_Speed                                                  String?                   @map("Shutter Speed") @db.Text
+  ISO___Film                                                     String?                   @map("ISO / Film") @db.Text
+  First_time_Filmmaker                                           String?                   @map("First-time Filmmaker") @db.Text
+  Directors                                                      String?                   @db.Text
+  Writers                                                        String?                   @db.Text
+  Producers                                                      String?                   @db.Text
+  Key_Cast                                                       String?                   @map("Key Cast") @db.Text
+  Other_Credits                                                  String?                   @map("Other Credits") @db.Text
+  Submitter_Statement                                            String?                   @map("Submitter Statement") @db.Text
+  Submitter_Biography                                            String?                   @map("Submitter Biography") @db.Text
+  Rating                                                         String?                   @db.Text
+  Flag                                                           String?                   @db.Text
+  Submission_Date                                                String?                   @map("Submission Date") @db.Text
+  Submission_Status                                              String?                   @map("Submission Status") @db.Text
+  Judging_Status                                                 String?                   @map("Judging Status") @db.Text
+  Submission_Deadlines                                           String?                   @map("Submission Deadlines") @db.Text
+  Submission_Categories                                          String?                   @map("Submission Categories") @db.Text
+  Submission_Fee                                                 String?                   @map("Submission Fee") @db.Text
+  Discount_Code                                                  String?                   @map("Discount Code") @db.Text
+  Submission_Link                                                String?                   @map("Submission Link") @db.Text
+  Submission_Password                                            String?                   @map("Submission Password") @db.Text
+  Assigned_Judges                                                String?                   @map("Assigned Judges") @db.Text
+  Distributor_Information                                        String?                   @map("Distributor Information") @db.Text
+  Submission_ID                                                  String?                   @map("Submission ID") @db.Text
+  Submission_Notes                                               String?                   @map("Submission Notes") @db.Text
+  URL_de_video_para_presentaci_n_de_pel_cula                     String?                   @map("URL de video para presentación de película") @db.Text
+  Which_2D_software_did_you_use_                                 String?                   @map("Which 2D software did you use?") @db.Text
+  Which_3D_software_did_you_use_                                 String?                   @map("Which 3D software did you use?") @db.Text
+  Did_you_use_post_production_                                   String?                   @map("Did you use post-production?") @db.Text
+  Which_sound__synchronization_and_editing_software_did_you_use_ String?                   @map("Which sound, synchronization and editing software did you use?") @db.Text
+  Which_colour_correction_software_did_you_use_                  String?                   @map("Which colour correction software did you use?") @db.Text
+  Which_colour_grading_software_did_you_use_                     String?                   @map("Which colour grading software did you use?") @db.Text
+  Which_type_of_storyboarding_did_you_do_                        String?                   @map("Which type of storyboarding did you do?") @db.Text
+  idedicion                                                      Int?
+  status                                                         Int?
+  creation_date                                                  DateTime?                 @default(now()) @db.DateTime(0)
+  update_date                                                    DateTime?                 @default(now()) @db.DateTime(0)
+  Aperture                                                       String?                   @db.Text
+  Screenings___Awards                                            String?                   @map("Screenings / Awards") @db.Text
+  Star                                                           String?                   @db.Text
+  Which_render_engine_did_you_use_                               String?                   @map("Which render engine did you use?") @db.Text
+  sesiones_cines_catalogo                                        sesiones_cines_catalogo[]
+}
+
+model cines {
+  idcine        Int       @id @default(autoincrement())
+  idedicion     Int
+  nombre        String    @db.Text
+  direccion     String    @db.Text
+  urlGoogle     String    @db.Text
+  imagenUrl     String?   @db.Text
+  creation_date DateTime  @default(now()) @db.DateTime(0)
+  update_date   DateTime  @default(now()) @db.DateTime(0)
+  status        Int
+  ediciones     ediciones @relation(fields: [idedicion], references: [idedicion], onDelete: NoAction, onUpdate: NoAction, map: "edicion")
+  salas         salas[]
+
+  @@index([idedicion], map: "edicion_idx")
+}
+
+model salas {
+  idsala         Int        @id @default(autoincrement())
+  idcine         Int
+  nombresala     String     @db.Text
+  capacidad      Int
+  capacidadventa Int
+  creation_date  DateTime   @default(now()) @db.DateTime(0)
+  update_date    DateTime   @default(now()) @db.DateTime(0)
+  status         Int
+  cines          cines      @relation(fields: [idcine], references: [idcine], onDelete: NoAction, onUpdate: NoAction, map: "Sala pertenece a un cine")
+  sesiones       sesiones[]
+
+  @@index([idcine], map: "Sala pertenece a un cine_idx")
+}
+
+model sesiones {
+  idsesion                Int                       @id @default(autoincrement())
+  nombreSesion            String?                   @db.Text
+  idsala                  Int?
+  orden                   Int?
+  creation_date           DateTime?                 @default(now()) @db.DateTime(0)
+  update_date             DateTime?                 @default(now()) @db.DateTime(0)
+  status                  Int?
+  salas                   salas?                    @relation(fields: [idsala], references: [idsala], onDelete: NoAction, onUpdate: NoAction, map: "Relación Sesion con Sala")
+  sesiones_cines_catalogo sesiones_cines_catalogo[]
+
+  @@index([idsala], map: "Relación Sesion con Sala_idx")
+}
+
+model sesiones_cines_catalogo {
+  idsesiones_cines_catalogo Int       @id
+  idsesion                  Int?
+  idcatalogo                Int?
+  status                    Int?
+  creation_date             DateTime? @default(now()) @db.DateTime(0)
+  update_date               DateTime? @default(now()) @db.DateTime(0)
+  catalogo                  catalogo? @relation(fields: [idcatalogo], references: [idcatalogo], onDelete: NoAction, onUpdate: NoAction, map: "Relacionando con catalogo")
+  sesiones                  sesiones? @relation(fields: [idsesion], references: [idsesion], onDelete: NoAction, onUpdate: NoAction, map: "Relacionando con sesion")
+
+  @@index([idcatalogo], map: "Relacionando con catalogo_idx")
+  @@index([idsesion], map: "Relacionando con sesion_idx")
+}
